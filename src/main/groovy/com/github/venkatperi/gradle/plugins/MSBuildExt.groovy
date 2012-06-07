@@ -5,6 +5,38 @@ import groovy.xml.StreamingMarkupBuilder
 import org.gradle.api.Project
 import org.gradle.api.tasks.StopActionException
 
+private class Config {
+    enum Type {
+        Configuration, General, Compile, Link
+    }
+
+    HashMap<Type, String> config = new HashMap<Type, String>()
+
+    List incDirs = []
+    List libDirs = []
+    List defines = []
+    List libs = []
+
+    void configuration(Closure c) {
+        config[Type.Configuration] =
+                new StreamingMarkupBuilder().bind(c).toString()
+    }
+
+    void general(Closure c) {
+        config[Type.General] =
+                new StreamingMarkupBuilder().bind(c).toString()
+    }
+
+    void compile(Closure c) {
+        config[Type.Compile] =
+                new StreamingMarkupBuilder().bind(c).toString()
+    }
+
+    void link(Closure c) {
+        config[Type.Link] =
+                new StreamingMarkupBuilder().bind(c).toString()
+    }
+}
 
 class MSBuildExt {
     private static final String CPP = 'cpp'
@@ -91,40 +123,6 @@ class MSBuildExt {
 
     def global(Closure c) {
         project.configure(global, c)
-    }
-
-    class Config {
-
-        enum Type {
-            Configuration, General, Compile, Link
-        }
-
-        HashMap<Type, String> config = new HashMap<Type, String>()
-
-        List incDirs = []
-        List libDirs = []
-        List defines = []
-        List libs = []
-
-        void configuration(Closure c) {
-            config[Type.Configuration] =
-                new StreamingMarkupBuilder().bind(c).toString()
-        }
-
-        void general(Closure c) {
-            config[Type.General] =
-                new StreamingMarkupBuilder().bind(c).toString()
-        }
-
-        void compile(Closure c) {
-            config[Type.Compile] =
-                new StreamingMarkupBuilder().bind(c).toString()
-        }
-
-        void link(Closure c) {
-            config[Type.Link] =
-                new StreamingMarkupBuilder().bind(c).toString()
-        }
     }
 
     def verify(Set<?> set, String value, String type) {

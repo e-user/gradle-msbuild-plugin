@@ -1,16 +1,8 @@
-
-//--------------------------------------------------------------------
-//repo_releases_url=
-//repo_snapshots_url=
-//repo_public_url=
-//repo_releases_username=
-//repo_releases_password=
-//repo_snapshots_username=
-//repo_snapshots_password=
-//--------------------------------------------------------------------
-
-apply plugin: 'groovy'
-apply plugin: 'maven'
+apply { 
+    plugin 'groovy'
+    plugin 'maven'
+    plugin 'eclipse'
+}
 
 configurations.all {
     resolutionStrategy{
@@ -24,25 +16,8 @@ configurations {
     release
 }
 
-buildscript {
-    dependencies {
-    }
-
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'minutes' 
-    }
-
-    repositories {
-        mavenRepo name: 'snapshots', url: repo_snapshots_url 
-        mavenRepo name: 'releases', url: repo_releases_url
-        mavenRepo name: 'public', url: repo_public_url
-    }
-}
-
 repositories {
-    mavenRepo name: 'snapshots', url: repo_snapshots_url 
-    mavenRepo name: 'releases', url: repo_releases_url
-    mavenRepo name: 'public', url: repo_public_url
+    mavenCentral()
 }
 
 uploadArchives {
@@ -67,14 +42,8 @@ uploadArchives {
     }
 }
 
-//--------------------------------------------------------------------
 dependencies {
-	compile gradleApi()
+    compile gradleApi()
     groovy localGroovy()
-}
-
-
-dependencies {
     testCompile 'junit:junit:4.8.2'
 }
-
